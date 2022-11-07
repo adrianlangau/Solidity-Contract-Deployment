@@ -19,8 +19,8 @@ pragma solidity ^0.5.0;
 
 // Define a new contract named `JointSavings`
 contract JointSavings {
-    address payable accountOne = 0x77B2aD074a1aF1AF2a408E3D48465E5F9ec75f45;
-    address payable accountTwo = 0x873Ad450656C46cb564eaf418472A1c77d7327Ad;
+    address payable accountOne;
+    address payable accountTwo;
     address public lastToWithdraw;
     uint public lastWithdrawAmount;
     uint public contractBalance;
@@ -43,28 +43,30 @@ contract JointSavings {
         /*
         Define a `require` statement that checks if the `recipient` is equal to either `accountOne` or `accountTwo`. The `requiere` statement returns the text `"You don't own this account!"` if it does not.
         */
-        require(recipient == accountOne || recipient == accountTwo, "You don't own this account!")
+        require(recipient == accountOne || recipient == accountTwo, "You don't own this account!");
 
         /*
         Define a `require` statement that checks if the `balance` is sufficient to accomplish the withdraw operation. If there are insufficient funds, the text `Insufficient funds!` is returned.
         */
-        
+        require(address(this).balance >= amount, "Insufficent funds!");
 
         /*
         Add and `if` statement to check if the `lastToWithdraw` is not equal to (`!=`) to `recipient` If `lastToWithdraw` is not equal, then set it to the current value of `recipient`.
         */
-        if (lastToWithdraw != amount){
-            
+        if (lastToWithdraw != recipient){
+            lastToWithdraw = recipient;
         }
 
         // Call the `transfer` function of the `recipient` and pass it the `amount` to transfer as an argument.
         // YOUR CODE HERE!
+        recipient.transfer(amount);
 
         // Set  `lastWithdrawAmount` equal to `amount`
-        lastToWithdraw = amount
+        lastWithdrawAmount = amount;
+    
 
         // Call the `contractBalance` variable and set it equal to the balance of the contract by using `address(this).balance` to reflect the new balance of the contract.
-        contractBalance = address(this).balance
+        contractBalance = address(this).balance;
     }
 
     // Define a `public payable` function named `deposit`.
@@ -73,7 +75,7 @@ contract JointSavings {
         /*
         Call the `contractBalance` variable and set it equal to the balance of the contract by using `address(this).balance`.
         */
-        accountBalance = address(this).balance;
+        contractBalance = address(this).balance;
     }
 
     /*
